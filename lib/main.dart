@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'login_screen.dart';
+import 'home_screen.dart';
+import 'add_activity_screen.dart';
+import 'map_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(EcoTrackApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class EcoTrackApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      title: 'EcoTrack',
+      theme: ThemeData(primarySwatch: Colors.green),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen(),
+        '/add': (context) => AddActivityScreen(),
+        '/map': (context) => MapScreen(),
+      },
     );
   }
 }
