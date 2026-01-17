@@ -38,7 +38,21 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
             SizedBox(height: 16),
 
-           
+            TextField(
+              controller: amountController,
+              decoration: InputDecoration(labelText: 'Amount'),
+              keyboardType: TextInputType.number,
+            ),
+
+            SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                minimumSize: Size(double.infinity, 48),
               ),
               child: Text('Save'),
             ),
