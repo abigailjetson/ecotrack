@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'notification_service.dart';
 
 class HomeScreen extends StatelessWidget {
   final activities = [
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         child: Icon(Icons.add),
         onPressed: () {
+          NotificationService.showSimpleNotification();
           Navigator.pushNamed(context, '/add');
         },
       ),

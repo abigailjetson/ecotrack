@@ -3,8 +3,11 @@ import 'login_screen.dart';
 import 'home_screen.dart';
 import 'add_activity_screen.dart';
 import 'map_screen.dart';
+import 'notification_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.init();
   runApp(EcoTrackApp());
 }
 
