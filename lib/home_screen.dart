@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'notification_service.dart';
 
 class HomeScreen extends StatelessWidget {
-  final activities = [
+  const HomeScreen({super.key});
+
+  final activities = const [
     {'type': 'Recycled plastic', 'amount': '2kg', 'date': 'Today'},
     {'type': 'Walking', 'amount': '3km', 'date': 'Yesterday'},
   ];
@@ -10,15 +12,15 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('EcoTrack')),
+      appBar: AppBar(title: const Text('EcoTrack')),
       body: ListView.builder(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         itemCount: activities.length,
         itemBuilder: (context, index) {
           final item = activities[index];
           return Card(
             elevation: 4,
-            margin: EdgeInsets.only(bottom: 16),
+            margin: const EdgeInsets.only(bottom: 16),
             child: ListTile(
               title: Text(item['type']!),
               subtitle: Text('${item['amount']} • ${item['date']}'),
@@ -28,7 +30,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           NotificationService.showSimpleNotification();
           Navigator.pushNamed(context, '/add');

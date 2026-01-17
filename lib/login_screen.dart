@@ -5,13 +5,13 @@ import 'admin_dashboard.dart';
 import 'user_dashboard.dart';
 
 class LoginScreen extends StatelessWidget {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -50,21 +50,20 @@ class LoginScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    // 1. Sign in
-                    UserCredential credential = await FirebaseAuth.instance
+                    final credential = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim(),
                         );
 
-                    final user = FirebaseAuth.instance.currentUser;
-                    print("USER UID: ${user?.uid}");
+                    final user = credential.user;
+                    debugPrint("USER UID: ${user?.uid}");
 
-                    // 2. Fetch role
                     final role = await UserRoleService().getRole(user!.uid);
-                    print("USER ROLE: $role");
+                    debugPrint("USER ROLE: $role");
 
-                    // 3. Navigate based on role
+                    if (!context.mounted) return;
+
                     if (role == 'admin') {
                       Navigator.pushReplacement(
                         context,
@@ -77,7 +76,14 @@ class LoginScreen extends StatelessWidget {
                       );
                     }
                   } catch (e) {
-                    print("Login error: $e");
+                    debugPrint("Login error: $e");
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Login failed: ${e.toString()}'),
+                        ),
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
