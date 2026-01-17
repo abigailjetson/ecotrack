@@ -4,10 +4,12 @@ import 'home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'admin_dashboard.dart';
 import 'user_dashboard.dart';
+import 'notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotificationService.init();
   runApp(const EcoTrackApp());
 }
 
