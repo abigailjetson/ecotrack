@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddActivityScreen extends StatefulWidget {
-  const AddActivityScreen({Key? key}) : super(key: key);
+  const AddActivityScreen({super.key});
 
   @override
   State<AddActivityScreen> createState() => _AddActivityScreenState();
@@ -12,6 +14,20 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
 
+  Future<void> saveActivity() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await FirebaseFirestore.instance.collection('activities').add({
+      'type': selectedType,
+      'description': descriptionController.text.trim(),
+      'amount': amountController.text.trim(),
+      'userId': user.uid,
+      'status': 'pending',
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,12 +37,12 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         child: Column(
           children: [
             DropdownButtonFormField<String>(
-              initialValue: selectedType,
-              items: [
-                'Recycling',
-                'Walking',
-                'Cycling',
-              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              value: selectedType,
+              items: const [
+                DropdownMenuItem(value: 'Recycling', child: Text('Recycling')),
+                DropdownMenuItem(value: 'Walking', child: Text('Walking')),
+                DropdownMenuItem(value: 'Cycling', child: Text('Cycling')),
+              ],
               onChanged: (value) => setState(() => selectedType = value),
               decoration: const InputDecoration(labelText: 'Activity type'),
             ),
@@ -49,7 +65,19 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             const SizedBox(height: 24),
 
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                if (selectedType == null ||
+                    descriptionController.text.isEmpty ||
+                    amountController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill all fields')),
+                  );
+                  return;
+                }
+
+                await saveActivity();
+
+                if (!context.mounted) return;
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
