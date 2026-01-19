@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
-import 'notification_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    if (context.mounted) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final activities = [
-      {'type': 'Recycled plastic', 'amount': '2kg', 'date': 'Today'},
+      {'type': 'Recycled Plastic', 'amount': '2kg', 'date': 'Today'},
       {'type': 'Walking', 'amount': '3km', 'date': 'Yesterday'},
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('EcoTrack')),
+      appBar: AppBar(
+        title: const Text('EcoTrack Home'),
+        backgroundColor: Colors.green,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => logout(context),
+          ),
+        ],
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: activities.length,
@@ -32,8 +48,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
         onPressed: () {
-          NotificationService.showSimpleNotification();
-          Navigator.pushNamed(context, '/add');
+          Navigator.pushNamed(context, '/add_activity');
         },
       ),
     );

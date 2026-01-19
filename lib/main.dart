@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'notification_service.dart';
+
 import 'login_screen.dart';
+import 'registration_screen.dart';
 import 'home_screen.dart';
+import 'admin_dashboard.dart';
 import 'add_activity_screen.dart';
 import 'map_screen.dart';
+import 'password_reset_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await NotificationService.init();
+  await Firebase.initializeApp();
   runApp(const EcoTrackApp());
 }
 
@@ -20,14 +21,17 @@ class EcoTrackApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'EcoTrack',
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
       routes: {
-        '/': (context) => const LoginScreen(),
         '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegistrationScreen(),
         '/home': (context) => const HomeScreen(),
-        '/map': (context) => const MapScreen(),
+        '/admin_home': (context) => const AdminHomeScreen(),
         '/add_activity': (context) => const AddActivityScreen(),
+        '/map': (context) => const MapScreen(),
+        '/reset_password': (context) => const PasswordResetScreen(),
       },
     );
   }

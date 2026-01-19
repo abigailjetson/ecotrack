@@ -18,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => isLoading = true);
 
     try {
-      // 1. Authenticate user
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -31,20 +30,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final uid = user.uid;
 
-      // 2. Fetch role from Realtime Database
       final snapshot = await FirebaseDatabase.instance
           .ref('users/$uid/role')
           .get();
 
       final role = snapshot.value as String?;
 
-      // 3. Check mounted before using context
       if (!mounted) return;
 
       if (role == 'admin') {
-        Navigator.pushReplacementNamed(context, '/admin');
+        Navigator.pushReplacementNamed(context, '/admin_home');
       } else if (role == 'user') {
-        Navigator.pushReplacementNamed(context, '/user');
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(
           context,
@@ -52,9 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${e.toString()}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Login failed: $e')));
       }
     } finally {
       if (mounted) {
