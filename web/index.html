@@ -14,7 +14,24 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="$FLUTTER_BASE_HREF">
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD...yourKey...",
+      authDomain: "ecotrack.firebaseapp.com",
+      databaseURL: "https://ecotrack-default-rtdb.firebaseio.com",
+      projectId: "ecotrack",
+      storageBucket: "ecotrack.appspot.com",
+      messagingSenderId: "46856511092",
+      appId: "1:46856511092:web:437c66d59e4b2d0090bb21"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">

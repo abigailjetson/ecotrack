@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => isLoading = true);
 
     try {
+      // Sign in
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -30,11 +31,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final uid = user.uid;
 
-      final snapshot = await FirebaseDatabase.instance
+      // 🔍 Debug: print UID
+      print('Logged in UID: $uid');
+
+      // Read full user node
+      final userSnapshot = await FirebaseDatabase.instance
+          .ref('users/$uid')
+          .get();
+
+      // 🔍 Debug: print full user data
+      print('User snapshot: ${userSnapshot.value}');
+
+      // Extract role
+      final roleSnapshot = await FirebaseDatabase.instance
           .ref('users/$uid/role')
           .get();
 
-      final role = snapshot.value as String?;
+      final role = roleSnapshot.value as String?;
 
       if (!mounted) return;
 
