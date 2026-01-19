@@ -39,7 +39,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         child: Column(
           children: [
             DropdownButtonFormField<String>(
-              value: selectedType,
+              initialValue: selectedType,
               items: const [
                 DropdownMenuItem(value: 'Recycling', child: Text('Recycling')),
                 DropdownMenuItem(value: 'Walking', child: Text('Walking')),
