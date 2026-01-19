@@ -1,10 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class UserRoleService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final DatabaseReference _db = FirebaseDatabase.instance.ref();
 
   Future<String?> getRole(String uid) async {
-    final doc = await _db.collection('users').doc(uid).get();
-    return doc.data()?['role'];
+    final snapshot = await _db.child('users/$uid').get();
+
+    if (!snapshot.exists) return null;
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    return data['role'] as String?;
   }
 }

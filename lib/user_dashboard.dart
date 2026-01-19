@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserDashboard extends StatelessWidget {
@@ -11,20 +11,11 @@ class UserDashboard extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Your Activities')),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('activities')
-            .where('userId', isEqualTo: user?.uid)
-            .orderBy('timestamp', descending: true)
-            .snapshots(),
+      body: StreamBuilder<DatabaseEvent>(
+        stream: FirebaseDatabase.instance.ref('activities').onValue,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final docs = snapshot.data!.docs;
-
-          if (docs.isEmpty) {
+          // 1. Handle loading or empty database
+          if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
             return const Center(
               child: Text(
                 'No activities yet.\nTap + to add one!',
@@ -34,12 +25,38 @@ class UserDashboard extends StatelessWidget {
             );
           }
 
+          // 2. Extract raw data safely
+          final raw = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
+
+          // 3. Filter activities belonging to this user
+          final userActivities =
+              raw.entries
+                  .where((entry) => entry.value['userId'] == user?.uid)
+                  .toList()
+                ..sort((a, b) {
+                  final aTime = a.value['timestamp'] ?? 0;
+                  final bTime = b.value['timestamp'] ?? 0;
+                  return bTime.compareTo(aTime);
+                });
+
+          // 4. If user has no activities
+          if (userActivities.isEmpty) {
+            return const Center(
+              child: Text(
+                'No activities yet.\nTap + to add one!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            );
+          }
+
+          // 5. Render list
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: docs.length,
+            itemCount: userActivities.length,
             itemBuilder: (context, index) {
-              final activity = docs[index];
-              final data = activity.data() as Map<String, dynamic>;
+              final entry = userActivities[index];
+              final data = entry.value as Map<dynamic, dynamic>;
 
               final status = data['status'] ?? 'pending';
               Color statusColor;

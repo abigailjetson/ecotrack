@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AddActivityScreen extends StatefulWidget {
@@ -18,13 +18,15 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    await FirebaseFirestore.instance.collection('activities').add({
+    final ref = FirebaseDatabase.instance.ref('activities').push();
+
+    await ref.set({
       'type': selectedType,
       'description': descriptionController.text.trim(),
       'amount': amountController.text.trim(),
       'userId': user.uid,
       'status': 'pending',
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': ServerValue.timestamp,
     });
   }
 
