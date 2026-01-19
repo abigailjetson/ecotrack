@@ -18,38 +18,48 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => isLoading = true);
 
     try {
+      // 1. Authenticate user
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
       final user = credential.user;
-      if (user == null) throw Exception('User not found');
-
-      final snapshot = await FirebaseDatabase.instance
-          .ref('users/${user.uid}')
-          .get();
-
-      if (!snapshot.exists) {
-        throw Exception('User role not found');
+      if (user == null) {
+        throw Exception('User not found');
       }
 
-      final data = snapshot.value as Map<dynamic, dynamic>;
-      final role = data['role'];
+      final uid = user.uid;
 
-      if (!context.mounted) return;
+      // 2. Fetch role from Realtime Database
+      final snapshot = await FirebaseDatabase.instance
+          .ref('users/$uid/role')
+          .get();
+
+      final role = snapshot.value as String?;
+
+      // 3. Check mounted before using context
+      if (!mounted) return;
 
       if (role == 'admin') {
         Navigator.pushReplacementNamed(context, '/admin');
-      } else {
+      } else if (role == 'user') {
         Navigator.pushReplacementNamed(context, '/user');
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Unknown role: $role')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString()}')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed: ${e.toString()}')),
+        );
+      }
     } finally {
-      setState(() => isLoading = false);
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 

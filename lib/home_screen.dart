@@ -4,13 +4,13 @@ import 'notification_service.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  final activities = const [
-    {'type': 'Recycled plastic', 'amount': '2kg', 'date': 'Today'},
-    {'type': 'Walking', 'amount': '3km', 'date': 'Yesterday'},
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final activities = [
+      {'type': 'Recycled plastic', 'amount': '2kg', 'date': 'Today'},
+      {'type': 'Walking', 'amount': '3km', 'date': 'Yesterday'},
+    ];
+
     return Scaffold(
       appBar: AppBar(title: const Text('EcoTrack')),
       body: ListView.builder(

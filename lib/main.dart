@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'notification_service.dart';
 import 'login_screen.dart';
 import 'home_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'admin_dashboard.dart';
-import 'user_dashboard.dart';
-import 'notification_service.dart';
-import 'firebase_options.dart';
-import 'package:ecotrack/add_activity_screen.dart';
+import 'add_activity_screen.dart';
+import 'map_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,13 +23,11 @@ class EcoTrackApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
       routes: {
+        '/': (context) => const LoginScreen(),
         '/login': (context) => const LoginScreen(),
-        '/home': (context) => HomeScreen(),
-        '/admin': (context) => const AdminDashboard(),
-        '/user': (context) => UserDashboard(),
-        '/': (context) => LoginScreen(),
-        '/dashboard': (context) => UserDashboard(),
-        '/add': (context) => const AddActivityScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/map': (context) => const MapScreen(),
+        '/add_activity': (context) => const AddActivityScreen(),
       },
     );
   }
