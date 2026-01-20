@@ -18,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => isLoading = true);
 
     try {
-      // Sign in
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -30,22 +29,17 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       final uid = user.uid;
-
-      // 🔍 Debug: print UID
       print('Logged in UID: $uid');
 
-      // Read full user node
       final userSnapshot = await FirebaseDatabase.instance
           .ref('users/$uid')
           .get();
-
-      // 🔍 Debug: print full user data
       print('User snapshot: ${userSnapshot.value}');
 
-      // Extract role
       final roleSnapshot = await FirebaseDatabase.instance
           .ref('users/$uid/role')
           .get();
+      print('Role snapshot: ${roleSnapshot.value}');
 
       final role = roleSnapshot.value as String?;
 
@@ -56,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (role == 'user') {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
+        print('Role is null or unknown: $role');
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Unknown role: $role')));
