@@ -1,0 +1,44 @@
+name: Flutter CI/CD Pipeline
+# This is the name of your workflow as it appears in GitHub Actions
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+# This triggers the workflow on every push or pull request to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # The job runs on a virtual Ubuntu machine
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        # This pulls your code from GitHub into the runner
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+        # This installs Flutter in the runner
+
+      - name: Install dependencies
+        run: flutter pub get
+        # This installs all packages listed in pubspec.yaml
+
+      - name: Run tests
+        run: flutter test
+        # This runs all unit and widget tests in your project
+
+      - name: Build APK
+        run: flutter build apk --release
+        #  This builds a release version of your Android app
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+        # This saves the built APK so you can download it from GitHub Actions
