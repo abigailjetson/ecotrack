@@ -1,3 +1,4 @@
+import 'package:ecotrack/main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -12,7 +13,7 @@ class NotificationService {
       android: androidSettings,
     );
 
-    await _notifications.initialize(settings);
+    await flutterLocalNotificationsPlugin.initialize(settings);
   }
 
   static Future<void> showSimpleNotification() async {

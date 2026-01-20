@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ecotrack/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,17 +32,17 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       final uid = user.uid;
-      print('Logged in UID: $uid');
+      log('Logged in UID: $uid');
 
       final userSnapshot = await FirebaseDatabase.instance
           .ref('users/$uid')
           .get();
-      print('User snapshot: ${userSnapshot.value}');
+      log('User snapshot: ${userSnapshot.value}');
 
       final roleSnapshot = await FirebaseDatabase.instance
           .ref('users/$uid/role')
           .get();
-      print('Role snapshot: ${roleSnapshot.value}');
+      log('Role snapshot: ${roleSnapshot.value}');
 
       final role = roleSnapshot.value as String?;
 
@@ -53,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         NotificationService.showSimpleNotification();
         Navigator.pushReplacementNamed(context, '/home');
       } else {
-        print('Role is null or unknown: $role');
+        log('Role is null or unknown: $role');
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Unknown role: $role')));

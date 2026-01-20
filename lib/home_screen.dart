@@ -1,9 +1,41 @@
 import 'package:ecotrack/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> userActivities = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchActivities();
+  }
+
+  Future<void> fetchActivities() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final ref = FirebaseDatabase.instance.ref('activities'); // ✅ fixed path
+    final snapshot = await ref.get();
+
+    final data = snapshot.value as Map<dynamic, dynamic>?;
+
+    if (data != null) {
+      userActivities = data.entries
+          .map((entry) => Map<String, dynamic>.from(entry.value))
+          .toList();
+
+      setState(() {});
+    }
+  }
 
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
@@ -14,11 +46,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activities = [
-      {'type': 'Recycled Plastic', 'amount': '2kg', 'date': 'Today'},
-      {'type': 'Walking', 'amount': '3km', 'date': 'Yesterday'},
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('EcoTrack Home'),
@@ -30,33 +57,32 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: activities.length,
-        itemBuilder: (context, index) {
-          final item = activities[index];
-          return Card(
-            elevation: 4,
-            margin: const EdgeInsets.only(bottom: 16),
-            child: ListTile(
-              title: Text(item['type']!),
-              subtitle: Text('${item['amount']} • ${item['date']}'),
+
+      body: userActivities.isEmpty
+          ? const Center(child: Text("No activities yet"))
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: userActivities.length,
+              itemBuilder: (context, index) {
+                final item = userActivities[index];
+                return Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: ListTile(
+                    title: Text(item['type'] ?? 'Unknown'),
+                    subtitle: Text(
+                      '${item['amount']} • ${item['description'] ?? ''}',
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
         onPressed: () {
-          ElevatedButton(
-            onPressed: () {
-              NotificationService.showSimpleNotification();
-              Navigator.pushNamed(context, '/add_activity');
-            },
-            child: Text('Test Notification'),
-          );
-
+          NotificationService.showSimpleNotification();
           Navigator.pushNamed(context, '/add_activity');
         },
       ),

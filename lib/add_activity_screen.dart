@@ -17,7 +17,6 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
   Future<void> saveActivity() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
 
     final ref = FirebaseDatabase.instance.ref('activities').push();
     NotificationService.showSimpleNotification();
@@ -26,7 +25,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       'type': selectedType,
       'description': descriptionController.text.trim(),
       'amount': amountController.text.trim(),
-      'userId': user.uid,
+      'userId': user?.uid,
       'status': 'pending',
       'timestamp': ServerValue.timestamp,
     });

@@ -24,7 +24,8 @@ class AdminHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
+
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +34,21 @@ class AdminHomeScreen extends StatelessWidget {
               'Welcome, Admin!',
               style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/all_activities');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                minimumSize: const Size(double.infinity, 48),
+              ),
+              child: const Text('View All Activities'),
+            ),
+
+            const SizedBox(height: 16),
 
             ElevatedButton(
               onPressed: () {

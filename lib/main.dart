@@ -1,4 +1,6 @@
+import 'package:ecotrack/admin_activities.dart';
 import 'package:ecotrack/firebase_options.dart';
+import 'package:ecotrack/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -25,6 +27,7 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(initSettings);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.init();
 
   runApp(const EcoTrackApp());
 }
@@ -43,6 +46,7 @@ class EcoTrackApp extends StatelessWidget {
         '/register': (context) => const RegistrationScreen(),
         '/home': (context) => const HomeScreen(),
         '/admin_home': (context) => const AdminHomeScreen(),
+        '/all_activities': (context) => const AdminActivitiesScreen(),
         '/add_activity': (context) => const AddActivityScreen(),
         '/map': (context) => const MapScreen(),
         '/reset_password_screen': (context) => const PasswordResetScreen(),

@@ -4,9 +4,9 @@ name: Flutter CI/CD Pipeline
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 # This triggers the workflow on every push or pull request to the main branch
 
 jobs:
@@ -43,3 +43,6 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
         # This saves the built APK so you can download it from GitHub Actions
+      - name: List files 
+        run: ls -la
+        # This lists the files in the current directory for debugging purposes
