@@ -2,6 +2,7 @@ name: Flutter CI/CD Pipeline
 # This is the name of your workflow as it appears in GitHub Actions
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
