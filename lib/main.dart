@@ -1,6 +1,7 @@
 import 'package:ecotrack/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'login_screen.dart';
 import 'registration_screen.dart';
@@ -10,9 +11,21 @@ import 'add_activity_screen.dart';
 import 'map_screen.dart';
 import 'password_reset_screen.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  const AndroidInitializationSettings androidInit =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initSettings = InitializationSettings(
+    android: androidInit,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const EcoTrackApp());
 }
 

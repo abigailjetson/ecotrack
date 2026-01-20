@@ -1,3 +1,4 @@
+import 'package:ecotrack/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -46,8 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       if (role == 'admin') {
+        NotificationService.showSimpleNotification();
         Navigator.pushReplacementNamed(context, '/admin_home');
       } else if (role == 'user') {
+        NotificationService.showSimpleNotification();
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         print('Role is null or unknown: $role');
@@ -104,7 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: isLoading ? null : login,
               style: ElevatedButton.styleFrom(

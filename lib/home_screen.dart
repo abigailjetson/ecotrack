@@ -1,3 +1,4 @@
+import 'package:ecotrack/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -48,6 +49,14 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
         onPressed: () {
+          ElevatedButton(
+            onPressed: () {
+              NotificationService.showSimpleNotification();
+              Navigator.pushNamed(context, '/add_activity');
+            },
+            child: Text('Test Notification'),
+          );
+
           Navigator.pushNamed(context, '/add_activity');
         },
       ),
