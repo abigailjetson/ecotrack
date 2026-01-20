@@ -32,7 +32,7 @@ class EcoTrackApp extends StatelessWidget {
         '/admin_home': (context) => const AdminHomeScreen(),
         '/add_activity': (context) => const AddActivityScreen(),
         '/map': (context) => const MapScreen(),
-        '/reset_password': (context) => const PasswordResetScreen(),
+        '/reset_password_screen': (context) => const PasswordResetScreen(),
       },
     );
   }
